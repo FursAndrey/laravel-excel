@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class File extends Model
 {
@@ -15,4 +17,15 @@ class File extends Model
     ];
 
     protected $table = 'files';
+
+    public static function putAndCreate(UploadedFile $file): string
+    {
+        $path = Storage::disk('public')->put('file', $file);
+        File::create([
+            'path' => $path,
+            'mime_type' => $file->getClientOriginalExtension(),
+        ]);
+
+        return $path;
+    }
 }
