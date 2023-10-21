@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Project\ImportStoreRequest;
+use App\Jobs\ImportProjectFromExcelJob;
 use App\Models\File;
 use Illuminate\Http\Request;
 
@@ -23,6 +24,8 @@ class ProjectController extends Controller
         $data = $request->validated();
 
         $path = File::putAndCreate($data['file']);
-        dd($path);
+
+        ImportProjectFromExcelJob::dispatchSync($path);
+        // dd($path);
     }
 }
