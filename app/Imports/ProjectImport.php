@@ -13,8 +13,7 @@ class ProjectImport implements ToCollection
     public function collection(Collection $collection)
     {
         foreach ($collection as $row) {
-            dump($row);
+            dd($row);
         }
-        dd(1);
     }
 }
