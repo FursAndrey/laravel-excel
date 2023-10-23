@@ -18,14 +18,14 @@ class File extends Model
 
     protected $table = 'files';
 
-    public static function putAndCreate(UploadedFile $file): string
+    public static function putAndCreate(UploadedFile $file): File
     {
         $path = Storage::disk('public')->put('file', $file);
-        File::create([
+        $file = File::create([
             'path' => $path,
             'mime_type' => $file->getClientOriginalExtension(),
         ]);
 
-        return $path;
+        return $file;
     }
 }

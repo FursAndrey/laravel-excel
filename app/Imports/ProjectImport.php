@@ -5,6 +5,7 @@ namespace App\Imports;
 use App\Factories\ProjectFactory;
 use App\Models\FailedRow;
 use App\Models\Project;
+use App\Models\Task;
 use App\Models\Type;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
@@ -14,6 +15,13 @@ use Maatwebsite\Excel\Validators\Failure;
 
 class ProjectImport implements ToCollection, WithValidation, SkipsOnFailure
 {
+    private Task $task;
+
+    public function __construct(Task $task)
+    {
+        $this->task = $task;
+    }
+
     /**
     * @param Collection $collection
     */
@@ -82,16 +90,42 @@ class ProjectImport implements ToCollection, WithValidation, SkipsOnFailure
 
             foreach ($failure->errors() as $error) {
                 $tmp[] = [
-                    'key' => $failure->attribute(),
+                    'key' => $this->fileAttributesRu()[$failure->attribute()],
                     'row' => $failure->row(),
-                    'message' => $error,
-                    'task_id' => 1,
+                    'message' => str_ireplace($failure->attribute().' ', '', $error),
+                    'task_id' => $this->task->id,
                 ];
             }
         }
 
         if ($tmp != []) {
             FailedRow::insertRows($tmp);
+            $this->task->update(['status' => Task::STATUS_ERROR]);
+        } else {
+            $this->task->update(['status' => Task::STATUS_SUCCESS]);
         }
+    }
+    
+    private function fileAttributesRu(): array
+    {
+        return [
+            '0' => 'Тип',
+            '1' => 'Наименование',
+            '2' => 'Дата создания',
+            '3' => 'Сетевик',
+            '4' => 'Количество участников',
+            '5' => 'Наличие аутсорсинга',
+            '6' => 'Наличие инвесторов',
+            '7' => 'Дедлайн',
+            '8' => 'Сдача в срок',
+            '9' => 'Вложение в первый этап',
+            '10' => 'Вложение во второй этап',
+            '11' => 'Вложение в третий этап',
+            '12' => 'Вложение в четвертый этап',
+            '13' => 'Подписание договора',
+            '14' => 'Количество услуг',
+            '15' => 'Комментарий',
+            '16' => 'Значение эффективности',
+        ];
     }
 }
