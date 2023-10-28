@@ -22,9 +22,11 @@
             </tr>
         </tbody>
     </table>
+    <Pagination :meta="failedList.meta"></pagination>
 </template>
 
 <script>
+import Pagination from "@/Components/Pagination.vue";
 import MainLayout from "@/Layouts/MainLayout.vue";
 import { Link } from '@inertiajs/vue3';
 export default {
@@ -32,8 +34,9 @@ export default {
     layout: MainLayout,
 
     components: {
-        Link
-    },
+    Link,
+    Pagination
+},
 
     props: [
         'failedList'

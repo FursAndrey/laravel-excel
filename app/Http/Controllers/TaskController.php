@@ -12,14 +12,14 @@ class TaskController extends Controller
 {
     public function index()
     {
-        $tasks = Task::with(['user', 'file'])->withCount('failedRows')->get();
+        $tasks = Task::with(['user', 'file'])->withCount('failedRows')->paginate(7);
         $tasks = TaskResource::collection($tasks);
         return inertia('Task/Index', compact('tasks'));
     }
 
     public function failedRows(int $task)
     {
-        $failedRows = FailedRow::where('task_id', '=', $task)->get();
+        $failedRows = FailedRow::where('task_id', '=', $task)->paginate(18);
         $failedList = FailedRowResource::collection($failedRows);
         return inertia('Task/FailedList', compact('failedList'));
     }
