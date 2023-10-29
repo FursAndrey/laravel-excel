@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Project\ImportStoreRequest;
+use App\Http\Resources\Project\ProjectResource;
 use App\Jobs\ImportProjectFromExcelJob;
 use App\Models\File;
+use App\Models\Project;
 use App\Models\Task;
 use Illuminate\Http\Request;
 
@@ -12,7 +14,9 @@ class ProjectController extends Controller
 {
     public function index()
     {
-        return inertia('Project/Index');
+        $projects = Project::with(['type'])->paginate(15);
+        $projects = ProjectResource::collection($projects);
+        return inertia('Project/Index', compact('projects'));
     }
 
     public function import()
@@ -32,6 +36,5 @@ class ProjectController extends Controller
             'file_id' => $file->id,
         ]);
         ImportProjectFromExcelJob::dispatchSync($path, $task);
-        // dd($path);
     }
 }
