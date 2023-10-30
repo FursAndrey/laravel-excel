@@ -6,7 +6,7 @@ use App\Models\Type;
 use Illuminate\Support\Collection;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
-class ProjectFactory extends BaseProjectFactory
+class ProjectStaticFactory extends BaseProjectFactory
 {
     protected $typeId;
     protected $title;
@@ -37,14 +37,14 @@ class ProjectFactory extends BaseProjectFactory
         $this->hasInvestors = isset($row[6]) ? self::convertYesNoToBoolean($row[6]) : null;
         $this->dateDeadline = isset($row[7]) ? Date::excelToDateTimeObject($row[7]) : null;
         $this->onTime = isset($row[8]) ? self::convertYesNoToBoolean($row[8]) : null;
-        $this->step1 = isset($row[9]) ? $row[9] : null;
-        $this->step2 = isset($row[10]) ? $row[10] : null;
-        $this->step3 = isset($row[11]) ? $row[11] : null;
-        $this->step4 = isset($row[12]) ? $row[12] : null;
-        $this->dateSigned = isset($row[13]) ? Date::excelToDateTimeObject($row[13]) : null;
-        $this->serviceCount = isset($row[14]) ? $row[14] : null;
-        $this->comment = isset($row[15]) ? $row[15] : null;
-        $this->effectiveness = isset($row[16]) ? $row[16] : null;
+        $this->step1 = isset($row[13]) ? $row[13] : null;
+        $this->step2 = isset($row[14]) ? $row[14] : null;
+        $this->step3 = isset($row[15]) ? $row[15] : null;
+        $this->step4 = isset($row[16]) ? $row[16] : null;
+        $this->dateSigned = isset($row[9]) ? Date::excelToDateTimeObject($row[9]) : null;
+        $this->serviceCount = isset($row[10]) ? $row[10] : null;
+        $this->comment = isset($row[11]) ? $row[11] : null;
+        $this->effectiveness = isset($row[12]) ? $row[12] : null;
     }
 
     public static function make(array $types, Collection $row): self

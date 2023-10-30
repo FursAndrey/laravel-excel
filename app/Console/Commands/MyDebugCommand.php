@@ -2,7 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Imports\ProjectDynamicImport;
 use App\Imports\ProjectImport;
+use App\Models\Task;
 use Illuminate\Console\Command;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -27,6 +29,10 @@ class MyDebugCommand extends Command
      */
     public function handle()
     {
-        Excel::import(new ProjectImport(), 'file/projects.xlsx', 'public');
+        //static file
+        // Excel::import(new ProjectImport(Task::find(1)), 'file/projects.xlsx', 'public');
+
+        //dynamic file
+        Excel::import(new ProjectDynamicImport(Task::find(1)), 'file/projects2.xlsx', 'public');
     }
 }

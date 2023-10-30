@@ -1,7 +1,4 @@
 <template>
-    <div>
-        project
-    </div>
     <table v-if="projects" class="border-collapse table-auto w-full text-sm">
         <thead>
             <tr>
