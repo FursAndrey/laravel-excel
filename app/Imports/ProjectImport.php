@@ -82,21 +82,7 @@ class ProjectImport implements ToCollection, WithValidation, SkipsOnFailure
 
     public function onFailure(Failure ...$failures)
     {
-        $tmp = [];
-        foreach($failures as $failure) {
-            if ($failure->row() === 1) {
-                continue;
-            }
-
-            foreach ($failure->errors() as $error) {
-                $tmp[] = [
-                    'key' => $this->fileAttributesRu()[$failure->attribute()],
-                    'row' => $failure->row(),
-                    'message' => str_ireplace($failure->attribute().' ', '', $error),
-                    'task_id' => $this->task->id,
-                ];
-            }
-        }
+        $tmp = onFailuresMap($failures, $this->fileAttributesRu(), $this->task);
 
         if ($tmp != []) {
             FailedRow::insertRows($tmp);
