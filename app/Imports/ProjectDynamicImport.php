@@ -109,25 +109,27 @@ class ProjectDynamicImport implements ToCollection, WithValidation, SkipsOnFailu
 
     public function rules(): array
     {
-        return [
-            // '0' => 'required|string',
-            // '1' => 'required|string',
-            // '2' => 'required|integer',
-            // '3' => 'nullable|string',
-            // '4' => 'nullable|integer',
-            // '5' => 'nullable|string',
-            // '6' => 'nullable|string',
-            // '7' => 'nullable|integer',
-            // '8' => 'nullable|string',
-            // '9' => 'nullable|integer',
-            // '10' => 'nullable|integer',
-            // '11' => 'nullable|integer',
-            // '12' => 'nullable|integer',
-            // '13' => 'nullable|integer',
-            // '14' => 'nullable|integer',
-            // '15' => 'nullable|string',
-            // '16' => 'nullable|numeric',
-        ];
+        $this->getDynamicValidationRules();
+
+        return array_replace([
+            '0' => 'required|string',
+            '1' => 'required|string',
+            '2' => 'required|integer',
+            '3' => 'nullable|string',
+            '4' => 'nullable|integer',
+            '5' => 'nullable|string',
+            '6' => 'nullable|string',
+            '7' => 'nullable|integer',
+            '8' => 'nullable|string',
+            '13' => 'nullable|integer',
+            '14' => 'nullable|integer',
+            '15' => 'nullable|integer',
+            '16' => 'nullable|integer',
+            '9' => 'nullable|integer',
+            '10' => 'nullable|integer',
+            '11' => 'nullable|string',
+            '12' => 'nullable|numeric',
+        ], $this->getDynamicValidationRules());
     }
 
     public function onFailure(Failure ...$failures)
@@ -158,7 +160,7 @@ class ProjectDynamicImport implements ToCollection, WithValidation, SkipsOnFailu
     
     private function fileAttributesRu(): array
     {
-        return [
+        return array_replace([
             '0' => 'Тип',
             '1' => 'Наименование',
             '2' => 'Дата создания',
@@ -176,11 +178,23 @@ class ProjectDynamicImport implements ToCollection, WithValidation, SkipsOnFailu
             '14' => 'Вложение во второй этап',
             '15' => 'Вложение в третий этап',
             '16' => 'Вложение в четвертый этап',
-        ];
+        ], $this->getRowsMap(self::$headers)['dynamic']);
     }
 
     public static function beforeSheet(BeforeSheet $event)
     {
         self::$headers = $event->getSheet()->getDelegate()->toArray()[0];
+    }
+
+    private function getDynamicValidationRules(): array
+    {
+        $dynamic = $this->getRowsMap(self::$headers)['dynamic'];
+
+        $rules = [];
+        foreach ($dynamic as $key => $value) {
+            $rules[$key] = 'nullable|integer';
+        }
+        
+        return $rules;
     }
 }
