@@ -3,6 +3,7 @@
         <form>
             <input @change="setExcel" type="file" ref="file" class="hidden">
             <div class="flex">
+                <input type="number" v-model="type" min="1" max="2" class="mr-4 rounded-full">
                 <span @click="selectExcel" class="block bg-green-600 rounded-full text-white p-4 text-center w-32 cursor-pointer">Excel</span>
                 <span v-if="file" @click="importExcel" class="ms-4 block bg-sky-600 rounded-full text-white p-4 text-center w-32 cursor-pointer">Import</span>
             </div>
@@ -19,6 +20,7 @@ export default {
     data() {
         return {
             file: null,
+            type: 1,
         };
     },
 
@@ -34,8 +36,15 @@ export default {
         importExcel() {
             const formData = new FormData;
             formData.append('file', this.file);
+            formData.append('type', this.type);
 
-            this.$inertia.post('/projects/import', formData);
+            this.$inertia.post('/projects/import', formData, {
+                onSuccess: () => {
+                    this.file = null;
+                    this.type = 1;
+                    this.$refs.file = null;
+                }
+            });
         }
     }
 }

@@ -15,6 +15,7 @@ class Task extends Model
         'user_id',
         'file_id',
         'status',
+        'type',
     ];
 
     protected $table = 'tasks';
